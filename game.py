@@ -56,14 +56,14 @@ class Game:
 		while True:
 			self.windowSurfaceObj.fill(self.black)
 			lastPoints = self.squarePoints
-			pygame.draw.polygon(self.windowSurfaceObj,self.r,self.squarePoints)
+			pygame.draw.aalines(self.windowSurfaceObj,self.r,True,self.squarePoints)
 			for ind in xrange(self.depth):
 				points = []
 				for i in xrange(self.vertexes):
 					j = i+1 if i<self.vertexes-1 else 0
 					points.append((lastPoints[i][0]+self.ratio*(lastPoints[j][0] - lastPoints[i][0]), lastPoints[i][1]+self.ratio*(lastPoints[j][1] - lastPoints[i][1])))
 				
-				pygame.draw.polygon(self.windowSurfaceObj,self.colors[(ind+1)%self.ncolors],points)
+				pygame.draw.aalines(self.windowSurfaceObj,self.colors[(ind+1)%self.ncolors],True,points)
 				lastPoints = points
 			
 			# Handle events
