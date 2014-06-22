@@ -1,6 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from math import pi,cos,sin
+from math import pi,cos,sin,sqrt
 
 class Game:
 	# Init game
@@ -36,6 +36,8 @@ class Game:
 		
 		self.ratio = 1.0/2
 		
+		self.circleStatus = True
+
 		# square calculation
 		self.minSide = min(self.res)
 		
@@ -56,6 +58,8 @@ class Game:
 		while True:
 			self.windowSurfaceObj.fill(self.black)
 			lastPoints = self.squarePoints
+			if self.circleStatus:
+				pygame.draw.circle(self.windowSurfaceObj,self.r,self.center,self.radius,1)
 			pygame.draw.aalines(self.windowSurfaceObj,self.r,True,self.squarePoints)
 			for ind in xrange(self.depth):
 				points = []
@@ -63,6 +67,13 @@ class Game:
 					j = i+1 if i<self.vertexes-1 else 0
 					points.append((lastPoints[i][0]+self.ratio*(lastPoints[j][0] - lastPoints[i][0]), lastPoints[i][1]+self.ratio*(lastPoints[j][1] - lastPoints[i][1])))
 				
+				dx = self.center[0] - points[0][0]
+				dy = self.center[1] - points[0][1]
+				dr = int(sqrt(dx**2+dy**2))
+				if (dr <= 0):
+					break
+				if self.circleStatus:
+					pygame.draw.circle(self.windowSurfaceObj,self.colors[(ind+1)%self.ncolors],self.center,dr,1)
 				pygame.draw.aalines(self.windowSurfaceObj,self.colors[(ind+1)%self.ncolors],True,points)
 				lastPoints = points
 			
@@ -119,4 +130,6 @@ class Game:
 					# Key pressed with intention to quit
 					if (event.key == K_ESCAPE or event.key == K_q):
 						pygame.event.post(pygame.event.Event(QUIT))
+					elif (event.key == K_c):
+						self.circleStatus = not self.circleStatus
 
